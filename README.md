@@ -2,10 +2,10 @@
 
 ## Motivation
 Getting access to the data stored in .proto files can be very handy, 
-allowing you to get single source of truth definitions about your services.
+allowing you to have a single source of your microservices meta-data.
 
-Here at SecureNative, we use protobufs extensively to define our micro-services and with the use of [packman](github.com/securenative/packman)
-we were able to generate all the  boilerplate parts allowing you to focus on solving the actual problem and not to mess around with infrastructural issues.
+Here at SecureNative, we use protobufs extensively to define our micro-services meta-data, and with the use of [packman](github.com/securenative/packman)
+we are able to generate all the boilerplate needed, allowing the developer to focus on solving the actual business problem need to be solved without the need to mess-around and wiring all the parts together.
 
 ## Quick Example
 
