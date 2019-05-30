@@ -117,9 +117,9 @@ func (this *defaultProtobufParser) onOption(option *proto.Option) {
 	case *proto.OneOfField:
 		name = option.Parent.(*proto.OneOfField).Name
 		kind = fieldKey
-	case *proto.EnumField:
-		name = option.Parent.(*proto.EnumField).Name
-		kind = fieldKey
+	/*case *proto.EnumField:
+	name = option.Parent.(*proto.EnumField).Name
+	kind = fieldKey*/
 	case *proto.Proto:
 		name = ""
 		kind = protoKey
