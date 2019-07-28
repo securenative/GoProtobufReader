@@ -14,13 +14,13 @@ package main
 
 import (
 	"fmt"
-	"github.com/securenative/GoProtobufReader/external"
+	"github.com/securenative/GoProtobufReader/proto_reader"
 	"io/ioutil"
 )
 
 func main() {
 	// Create an instance of the protobuf reader:
-	reader := protobuf.NewReader()
+	reader := proto_reader.NewReader()
 	
 	// Read a protobuf file:
 	bytes, _ := ioutil.ReadFile("path-to-file.proto")

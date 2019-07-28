@@ -1,4 +1,4 @@
-package internal
+package proto_reader
 
 import (
 	"github.com/emicklei/proto"

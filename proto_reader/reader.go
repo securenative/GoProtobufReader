@@ -1,4 +1,4 @@
-package internal
+package proto_reader
 
 type defaultProtobufReader struct {
 	parserFactory ParserFactory

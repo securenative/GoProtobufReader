@@ -1,4 +1,4 @@
-package internal
+package proto_reader
 
 func parseProtoDefinition(result *ParseResult, definition *ProtobufDefinition) {
 	optKey := encodeOptionKey(protoKey, "")
