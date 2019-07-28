@@ -1,6 +1,9 @@
 package proto_reader
 
-import "github.com/emicklei/proto"
+import (
+	"fmt"
+	"github.com/emicklei/proto"
+)
 
 type Option interface {
 	Name() string
@@ -29,6 +32,16 @@ type Field struct {
 	SubType    *string
 	Comment    string
 	Options    []Option
+}
+
+func (this *Field) TypeString() string {
+	if this.IsRepeated {
+		return fmt.Sprintf("repeated %s", this.Type)
+	} else if this.IsMap {
+		return fmt.Sprintf("map<%s, %s>", this.Type, *this.SubType)
+	} else {
+		return this.Type
+	}
 }
 
 type Message struct {
