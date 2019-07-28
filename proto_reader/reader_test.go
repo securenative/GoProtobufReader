@@ -25,6 +25,7 @@ message AddInput {
 message AddOutput {
 	// The sum of the input
     int32 result = 1;
+	map<string, int32> took = 2;
 }
 
 // Service that adds two integers

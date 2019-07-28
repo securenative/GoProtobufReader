@@ -26,7 +26,7 @@ type Field struct {
 	Type       string
 	IsRepeated bool
 	IsMap      bool
-	SubType    *Field
+	SubType    *string
 	Comment    string
 	Options    []Option
 }

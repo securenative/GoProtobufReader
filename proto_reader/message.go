@@ -47,10 +47,10 @@ func parseField(field proto.Visitee) *Field {
 		casted := field.(*proto.MapField)
 		return &Field{
 			Name:       casted.Name,
-			Type:       casted.Type,
+			Type:       casted.KeyType,
 			IsRepeated: false,
 			IsMap:      true,
-			SubType:    parseField(field),
+			SubType:    &casted.Type,
 			Comment:    trimComment(casted.Comment),
 		}
 	case *proto.OneOfField:
