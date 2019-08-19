@@ -22,7 +22,9 @@ func parseFields(result *ParseResult, fields []proto.Visitee) map[string]*Field 
 	out := make(map[string]*Field)
 	for _, f := range fields {
 		field := parseField(f)
-
+		if field == nil {
+			continue
+		}
 		key := encodeOptionKey(fieldKey, field.Name)
 		options := parseOptions(result.Options[key])
 		field.Options = options
@@ -57,5 +59,5 @@ func parseField(field proto.Visitee) *Field {
 		panic("OneOf fields are not supported")
 	}
 
-	panic("Unsupported field type")
+	return nil
 }
