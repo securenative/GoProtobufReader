@@ -44,6 +44,16 @@ func (this *Field) TypeString() string {
 	}
 }
 
+type EnumEntry struct {
+	Name  string
+	Index int
+}
+
+type Enum struct {
+	Name  string
+	Items []EnumEntry
+}
+
 type Message struct {
 	Name    string
 	Fields  map[string]*Field
@@ -71,6 +81,7 @@ type Service struct {
 type ProtobufDefinition struct {
 	Messages map[string]*Message
 	Services map[string]*Service
+	Enums    map[string]*Enum
 	Options  []Option
 }
 

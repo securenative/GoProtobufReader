@@ -13,12 +13,24 @@ package services;
 
 option go_package = "integration";
 
+enum RootEnum {
+	ZERO = 0;
+	ONE = 1;
+	TWO = 2;
+}
+
 // The input of Add
 message AddInput {
 	// The first number to sum up
     int32 numberA = 1;
 	// The second number to sum up
     int32 numberB = 2;
+
+	enum MessageEnum {
+		ZERO = 0;
+		ONE = 1;
+		TWO = 2;
+	}
 }
 
 // The output of Add
@@ -50,6 +62,28 @@ service Adder {
 
 	assert.Equal(t, 2, len(result.Messages))
 	assertMessages(t, result)
+	assertEnums(t, result)
+}
+
+func assertEnums(t *testing.T, result *ProtobufDefinition) {
+	assert.NotEmpty(t, result.Enums)
+	assert.EqualValues(t, 2, len(result.Enums))
+
+	assert.EqualValues(t, "RootEnum", result.Enums["RootEnum"].Name)
+	assert.EqualValues(t, "ZERO", result.Enums["RootEnum"].Items[0].Name)
+	assert.EqualValues(t, 0, result.Enums["RootEnum"].Items[0].Index)
+	assert.EqualValues(t, "ONE", result.Enums["RootEnum"].Items[1].Name)
+	assert.EqualValues(t, 1, result.Enums["RootEnum"].Items[1].Index)
+	assert.EqualValues(t, "TWO", result.Enums["RootEnum"].Items[2].Name)
+	assert.EqualValues(t, 2, result.Enums["RootEnum"].Items[2].Index)
+
+	assert.EqualValues(t, "MessageEnum", result.Enums["MessageEnum"].Name)
+	assert.EqualValues(t, "ZERO", result.Enums["MessageEnum"].Items[0].Name)
+	assert.EqualValues(t, 0, result.Enums["MessageEnum"].Items[0].Index)
+	assert.EqualValues(t, "ONE", result.Enums["MessageEnum"].Items[1].Name)
+	assert.EqualValues(t, 1, result.Enums["MessageEnum"].Items[1].Index)
+	assert.EqualValues(t, "TWO", result.Enums["MessageEnum"].Items[2].Name)
+	assert.EqualValues(t, 2, result.Enums["MessageEnum"].Items[2].Index)
 }
 
 func assertMessages(t *testing.T, result *ProtobufDefinition) {

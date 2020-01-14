@@ -17,6 +17,7 @@ func (this *defaultProtobufReader) Read(protoText string) (*ProtobufDefinition, 
 	}
 
 	var out ProtobufDefinition
+	parseEnums(result, &out)
 	parseMessages(result, &out)
 	parseServices(result, &out)
 	parseProtoDefinition(result, &out)
