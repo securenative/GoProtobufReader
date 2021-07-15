@@ -1,0 +1,78 @@
+syntax = "proto3";
+package test;
+
+import "common.proto";
+
+option go_package = "users";
+
+service Users {
+  rpc LoginWithPassword (PasswordLogin) returns (AuthToken) {
+    option (google.api.http) = {
+      post: "/api/v1/loginWithPassword"
+      body: "*"
+    };
+  }
+
+  rpc LoginWithMagicToken (MagicTokenLogin) returns (AuthToken) {
+    option (google.api.http) = {
+      post: "/api/v1/loginWithMagicToken"
+      body: "*"
+    };
+  }
+
+  rpc Logout(AuthToken) returns (common.Empty) {
+    option (google.api.http) = {
+      post: "/api/v1/logout"
+      body: "*"
+    };
+  }
+
+  rpc VerifyToken (AuthToken) returns (User) {
+    option (google.api.http) = {
+      post: "/api/v1/verifyToken"
+      body: "*"
+    };
+  }
+
+  rpc RefreshToken (AuthToken) returns (AuthToken) {
+    option (google.api.http) = {
+      post: "/api/v1/refreshToken"
+      body: "*"
+    };
+  }
+
+  rpc GetUser(UserId) returns (User) {
+    option (google.api.http) = {
+      get: "/api/v1/user/{uuid}"
+    };
+  }
+}
+
+message UserId {
+  string uuid = 1;
+}
+
+message User {
+  int64 id = 1;
+  string uuid = 2;
+  string email = 3;
+  string phone = 4;
+  bool isEmailVerified = 6;
+  bool isPhoneVerified = 7;
+  int64 createdAt = 10;
+}
+
+message PasswordLogin {
+  string username = 1;
+  string password = 2;
+  string fingerprint = 3;
+}
+
+message MagicTokenLogin {
+  string token = 1;
+  string fingerprint = 2;
+}
+
+message AuthToken {
+  string token = 1;
+}

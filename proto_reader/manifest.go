@@ -91,6 +91,7 @@ type ParseResult struct {
 	Methods  map[string]*proto.RPC
 	Options  map[string][]*proto.Option
 	Enums    map[string]*proto.Enum
+	Imports  map[string]*proto.Import
 }
 
 type ProtobufParser interface {
@@ -101,6 +102,7 @@ type ParserFactory = func() ProtobufParser
 
 type ProtobufReader interface {
 	Read(protoText string) (*ProtobufDefinition, error)
+	ReadFile(protoFile, importPath string) (*ProtobufDefinition, error)
 }
 
 func (this *ConstOption) Name() string {

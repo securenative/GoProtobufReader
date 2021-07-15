@@ -1,6 +1,9 @@
 package proto_reader
 
-import "github.com/emicklei/proto"
+import (
+	"fmt"
+	"github.com/emicklei/proto"
+)
 
 func parseOptions(options []*proto.Option) []Option {
 	out := make([]Option, len(options))
@@ -25,7 +28,7 @@ func parseLiteral(optionName string, literal *proto.Literal) Option {
 func parseArray(name string, literals []*proto.Literal) Option {
 	out := ArrayOption{Key: name}
 	for idx, l := range literals {
-		out.Value = append(out.Value, parseLiteral(string(idx), l))
+		out.Value = append(out.Value, parseLiteral(fmt.Sprint(idx), l))
 	}
 	return &out
 }

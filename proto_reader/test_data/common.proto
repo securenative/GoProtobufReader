@@ -1,0 +1,11 @@
+syntax = "proto3";
+package test;
+
+option go_package = "commons";
+
+message Empty {}
+
+message ProbeStatus {
+    bool isOk = 1;
+    string message = 2;
+}

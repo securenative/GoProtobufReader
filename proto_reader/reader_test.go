@@ -11,6 +11,8 @@ func TestDefaultProtobufReader_Read(t *testing.T) {
 syntax = "proto3";
 package services;
 
+import "commons.proto";
+
 option go_package = "integration";
 
 enum RootEnum {
@@ -49,6 +51,8 @@ service Adder {
 			body: "*"
 		};
 	};
+
+	rpc Destroy (commons.Empty) returns (commons.Empty);
 }
 `
 

@@ -21,6 +21,7 @@ type defaultProtobufParser struct {
 	services map[string]*proto.Service
 	methods  map[string]*proto.RPC
 	options  map[string][]*proto.Option
+	imports  map[string]*proto.Import
 	enums    map[string]*proto.Enum
 }
 
@@ -32,6 +33,7 @@ func NewProtobufParser() ProtobufParser {
 		methods:  make(map[string]*proto.RPC),
 		options:  make(map[string][]*proto.Option),
 		enums:    make(map[string]*proto.Enum),
+		imports:  make(map[string]*proto.Import),
 	}
 }
 
@@ -48,7 +50,6 @@ func (this *defaultProtobufParser) addOption(parentType string, parentName strin
 }
 
 func (this *defaultProtobufParser) Parse(protoText string) (*ParseResult, error) {
-
 	if this.consumed {
 		return nil,
 			errors.New("reader should be consumed only once, for each read you'll need to create a new reader")
@@ -76,6 +77,7 @@ func (this *defaultProtobufParser) Parse(protoText string) (*ParseResult, error)
 		Enums:    this.enums,
 		Options:  this.options,
 		Services: this.services,
+		Imports: this.imports,
 	}, nil
 }
 
@@ -117,10 +119,14 @@ func (this *defaultProtobufParser) onOption(option *proto.Option) {
 	case *proto.OneOfField:
 		name = option.Parent.(*proto.OneOfField).Name
 		kind = fieldKey
-	/*case *proto.EnumField:
-	name = option.Parent.(*proto.EnumField).Name
-	kind = fieldKey*/
 	case *proto.Proto:
+		opt := option.Parent.(*proto.Proto).Elements
+		for _, elem := range opt {
+			op, ok := elem.(*proto.Import)
+			if ok {
+				this.imports[op.Filename] = op
+			}
+		}
 		name = ""
 		kind = protoKey
 	}
