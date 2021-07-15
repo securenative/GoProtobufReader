@@ -14,5 +14,5 @@ func TestDefaultProtobufReader_ReadFile(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, result)
 	assert.NotNil(t, result.Services["Users"].Methods["Logout"].Output)
-	assert.NotNil(t, result.Messages["common.Empty"])
+	assert.NotNil(t, result.Messages["Empty"])
 }

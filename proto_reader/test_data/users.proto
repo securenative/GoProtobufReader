@@ -20,7 +20,7 @@ service Users {
     };
   }
 
-  rpc Logout(AuthToken) returns (common.Empty) {
+  rpc Logout(AuthToken) returns (Empty) {
     option (google.api.http) = {
       post: "/api/v1/logout"
       body: "*"

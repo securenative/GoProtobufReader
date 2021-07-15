@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path"
-	"strings"
 )
 
 type defaultProtobufReader struct {
@@ -36,7 +35,7 @@ func (this *defaultProtobufReader) ReadFile(protoFile, importPath string) (*Prot
 }
 
 func (this *defaultProtobufReader) ReadFileCustom(protoFile, importPath string, fileReader FileReader) (*ProtobufDefinition, error) {
-	result, err := this.parseRecursively(protoFile, importPath, fileReader, nil)
+	result, err := this.parseRecursively(protoFile, importPath, fileReader, nil, "")
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +49,7 @@ func (this *defaultProtobufReader) ReadFileCustom(protoFile, importPath string, 
 	return &out, nil
 }
 
-func (this *defaultProtobufReader) parseRecursively(protoFile string, importPath string, reader FileReader, parent *ParseResult) (*ParseResult, error) {
+func (this *defaultProtobufReader) parseRecursively(protoFile string, importPath string, reader FileReader, parent *ParseResult, rootPkg string) (*ParseResult, error) {
 	content := reader.ReadAll(protoFile)
 
 	if importPath == "." {
@@ -63,22 +62,26 @@ func (this *defaultProtobufReader) parseRecursively(protoFile string, importPath
 		return nil, err
 	}
 
+	if parent == nil {
+		rootPkg = result.Package
+	}
+
 	for childPath := range result.Imports {
 		filePath := path.Join(importPath, childPath)
-		if _, err := this.parseRecursively(filePath, importPath, reader, result); err != nil {
+		if _, err := this.parseRecursively(filePath, importPath, reader, result, rootPkg); err != nil {
 			return nil, err
 		}
 	}
 
 	if parent != nil {
 		for enumName, enum := range result.Enums {
-			key := formatKey(protoFile, importPath, enumName)
+			key := formatKey(result.Package, enumName, rootPkg)
 			enum.Name = key
 			parent.Enums[enumName] = enum
 		}
 
 		for msgName, msg := range result.Messages {
-			key := formatKey(protoFile, importPath, msgName)
+			key := formatKey(result.Package, msgName, rootPkg)
 			msg.Name = key
 			parent.Messages[key] = msg
 		}
@@ -88,19 +91,15 @@ func (this *defaultProtobufReader) parseRecursively(protoFile string, importPath
 	}
 }
 
-func formatKey(protoFile string, importPath string, name string) string {
-	key := strings.ReplaceAll(protoFile, "/", ".")
-	key = strings.TrimPrefix(key, "./")
-	key = strings.TrimPrefix(key, "/")
-	key = strings.TrimPrefix(key, strings.TrimPrefix(strings.TrimPrefix(importPath, "./"), "/"))
-	key = strings.TrimSuffix(key, ".proto")
-	key = fmt.Sprintf("%s.%s", key, name)
-	key = strings.TrimPrefix(key, ".")
-	return key
+func formatKey(pkg string, name string, rootPkg string) string {
+	if rootPkg == pkg {
+		return name
+	} else {
+		return fmt.Sprintf("%s.%s", pkg, name)
+	}
 }
 
 type LocalFileReader struct {
-
 }
 
 func (this *LocalFileReader) ReadAll(filePath string) string {

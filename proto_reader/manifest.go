@@ -92,6 +92,7 @@ type ParseResult struct {
 	Options  map[string][]*proto.Option
 	Enums    map[string]*proto.Enum
 	Imports  map[string]*proto.Import
+	Package  string
 }
 
 type ProtobufParser interface {

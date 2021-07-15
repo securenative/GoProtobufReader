@@ -23,6 +23,7 @@ type defaultProtobufParser struct {
 	options  map[string][]*proto.Option
 	imports  map[string]*proto.Import
 	enums    map[string]*proto.Enum
+	pkg      string
 }
 
 func NewProtobufParser() ProtobufParser {
@@ -34,6 +35,7 @@ func NewProtobufParser() ProtobufParser {
 		options:  make(map[string][]*proto.Option),
 		enums:    make(map[string]*proto.Enum),
 		imports:  make(map[string]*proto.Import),
+		pkg:      "",
 	}
 }
 
@@ -77,7 +79,8 @@ func (this *defaultProtobufParser) Parse(protoText string) (*ParseResult, error)
 		Enums:    this.enums,
 		Options:  this.options,
 		Services: this.services,
-		Imports: this.imports,
+		Imports:  this.imports,
+		Package:  this.pkg,
 	}, nil
 }
 
@@ -122,9 +125,13 @@ func (this *defaultProtobufParser) onOption(option *proto.Option) {
 	case *proto.Proto:
 		opt := option.Parent.(*proto.Proto).Elements
 		for _, elem := range opt {
-			op, ok := elem.(*proto.Import)
-			if ok {
+			switch elem.(type) {
+			case *proto.Import:
+				op := elem.(*proto.Import)
 				this.imports[op.Filename] = op
+			case *proto.Package:
+				op := elem.(*proto.Package)
+				this.pkg = op.Name
 			}
 		}
 		name = ""
