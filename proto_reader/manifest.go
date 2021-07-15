@@ -103,6 +103,11 @@ type ParserFactory = func() ProtobufParser
 type ProtobufReader interface {
 	Read(protoText string) (*ProtobufDefinition, error)
 	ReadFile(protoFile, importPath string) (*ProtobufDefinition, error)
+	ReadFileCustom(protoFile, importPath string, fileReader FileReader) (*ProtobufDefinition, error)
+}
+
+type FileReader interface {
+	ReadAll(filePath string) string
 }
 
 func (this *ConstOption) Name() string {
